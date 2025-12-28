@@ -16,6 +16,9 @@
     "types": ["node"],
     "skipLibCheck": true,
 
-    "noEmit": true
+    "noEmit": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }
