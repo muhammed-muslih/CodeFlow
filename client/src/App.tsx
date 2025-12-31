@@ -1,12 +1,18 @@
 import "./App.css";
-import { Button } from "./components/ui/Button";
+import { Input } from "./components/ui/Input";
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center gap-4 ">
-      <Button>Login</Button>
-      <Button variant="secondary">Cancel</Button>
-      <Button isLoading>Signing in</Button>
-    </div>
+    <>
+      <div className="max-w-sm p-10 space-y-4">
+        <Input label="Email" placeholder="you@example.com" />
+        <Input
+          label="Password"
+          placeholder="password"
+          type="password"
+          error="Invalid password"
+        />
+      </div>
+    </>
   );
 }
 
