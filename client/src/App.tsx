@@ -1,19 +1,8 @@
 import "./App.css";
-import { Input } from "./components/ui/Input";
+import LoginPage from "./pages/auth/Login";
+
 function App() {
-  return (
-    <>
-      <div className="max-w-sm p-10 space-y-4">
-        <Input label="Email" placeholder="you@example.com" />
-        <Input
-          label="Password"
-          placeholder="password"
-          type="password"
-          error="Invalid password"
-        />
-      </div>
-    </>
-  );
+  return <LoginPage />;
 }
 
 export default App;
