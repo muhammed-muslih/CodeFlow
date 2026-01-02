@@ -13,8 +13,6 @@ export function Card({
   children,
   ...props
 }: CardProps) {
-  console.log(description);
-
   return (
     <div
       className={cn(

@@ -1,9 +1,13 @@
 import { Button, Input, Divider } from "../ui";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -12,6 +16,9 @@ export function LoginForm() {
     setTimeout(() => {
       setLoading(false);
     }, 1500);
+
+    login({ id: "1", name: "Muslih", email: "muslih@example.com" });
+    navigate("/app", { replace: true });
   };
 
   const handleGithubLogin = () => {

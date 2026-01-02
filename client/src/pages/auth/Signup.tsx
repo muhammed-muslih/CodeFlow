@@ -10,7 +10,7 @@ export default function SignupPage() {
       <SignupForm />
       <p className="mt-4 text-center text-xs  text-text-secondary">
         Already have an account?{" "}
-        <Link to={"/login"} className="text-primary hover:underline">
+        <Link to={"/auth/login"} className="text-primary hover:underline">
           Log in
         </Link>
       </p>
