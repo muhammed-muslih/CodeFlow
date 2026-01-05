@@ -19,7 +19,10 @@ export const signupService = async (
 
   const user = await User.create({ name, email, password: hashedPassword });
 
-  const token = signAccessToken({ userId: user._id.toString() });
+  const token = signAccessToken({
+    userId: user._id.toString(),
+    email: user.email,
+  });
 
   return {
     user: {
@@ -45,7 +48,10 @@ export const loginService = async (email: string, password: string) => {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = signAccessToken({ userId: user._id.toString() });
+  const token = signAccessToken({
+    userId: user._id.toString(),
+    email: user.email,
+  });
 
   return {
     user: {
