@@ -14,15 +14,7 @@ export const protect = (
   _res: Response,
   next: NextFunction,
 ) => {
-  let token: string | undefined;
-
-  if (req.cookies?.token) {
-    token = req.cookies.token;
-  }
-
-  if (!token && req.headers.authorization?.startsWith("Bearer ")) {
-    token = req.headers.authorization.split(" ")[1];
-  }
+  const token = req.cookies?.accessToken;
 
   if (!token) {
     return next(new AppError("Authentication required.", 401));
