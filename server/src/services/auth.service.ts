@@ -1,6 +1,10 @@
 import { AppError } from "@/utils/AppError.js";
 import { hashPassword, verifyPassword } from "./password.service.js";
-import { signAccessToken } from "./token.service.js";
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+} from "./token.service.js";
 import { User } from "@/models/User.js";
 
 export const signupService = async (
@@ -19,7 +23,12 @@ export const signupService = async (
 
   const user = await User.create({ name, email, password: hashedPassword });
 
-  const token = signAccessToken({
+  const accessToken = signAccessToken({
+    userId: user._id.toString(),
+    email: user.email,
+  });
+
+  const refreshToken = signRefreshToken({
     userId: user._id.toString(),
     email: user.email,
   });
@@ -30,7 +39,8 @@ export const signupService = async (
       name: user.name,
       email: user.email,
     },
-    token,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -48,7 +58,12 @@ export const loginService = async (email: string, password: string) => {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = signAccessToken({
+  const accessToken = signAccessToken({
+    userId: user._id.toString(),
+    email: user.email,
+  });
+
+  const refreshToken = signRefreshToken({
     userId: user._id.toString(),
     email: user.email,
   });
@@ -59,6 +74,20 @@ export const loginService = async (email: string, password: string) => {
       name: user.name,
       email: user.email,
     },
-    token,
+    accessToken,
+    refreshToken,
   };
+};
+
+export const refreshAccessTokenService = (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new AppError("Refresh token missing", 401);
+  }
+
+  const decoded = verifyRefreshToken(refreshToken);
+
+  return signAccessToken({
+    userId: decoded.userId,
+    email: decoded.email,
+  });
 };
