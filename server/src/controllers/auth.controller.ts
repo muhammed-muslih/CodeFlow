@@ -5,8 +5,10 @@ import {
   loginService,
   refreshAccessTokenService,
 } from "@/services/auth.service.js";
+import { getGitHubUser } from "@/services/github.service.js";
 import { env } from "@/config/env.js";
 import { generateCsrfToken } from "@/utils/csrf.js";
+import { AppError } from "@/utils/AppError.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -111,5 +113,33 @@ export const refreshToken = asyncHandler(
     });
 
     res.status(200).json({ status: "success" });
+  },
+);
+
+//Browser shows GitHub login page
+export const githubLogin = (_req: Request, res: Response) => {
+  const githubAuthUrl =
+    "https://github.com/login/oauth/authorize" +
+    `?client_id=${env.GITHUB_CLIENT_ID}` +
+    `&redirect_uri=${env.GITHUB_CALLBACK_URL}` +
+    `&scope=user:email`;
+
+  res.redirect(githubAuthUrl);
+};
+
+export const githubCallback = asyncHandler(
+  async (req: Request, res: Response) => {
+    const code = req.query?.code as string;
+
+    if (!code) {
+      throw new AppError("GitHub code missing", 400);
+    }
+
+    const githubUser = await getGitHubUser(code);
+
+    res.status(200).json({
+      status: "success",
+      data: githubUser,
+    });
   },
 );
