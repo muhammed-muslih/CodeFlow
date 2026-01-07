@@ -5,6 +5,7 @@ import { httpLogger } from "@/utils/loggerHttp.js";
 import { errorHandler } from "@/middleware/error.middleware.js";
 import authRoutes from "@/routes/auth.routes.js";
 import { AppError } from "./utils/AppError.js";
+import { csrfProtect } from "@/middleware/csrf.middleware.js";
 
 const app = express();
 
@@ -13,8 +14,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(httpLogger);
 
-//routes
+// public auth routes (NO CSRF)
 app.use("/api/auth", authRoutes);
+
+// protected routes (CSRF REQUIRED)
 
 app.get("/", (_req, res) => {
   res.send("Hello from CodeFlow");

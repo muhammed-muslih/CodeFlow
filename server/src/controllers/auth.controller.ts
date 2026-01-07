@@ -6,6 +6,7 @@ import {
   refreshAccessTokenService,
 } from "@/services/auth.service.js";
 import { env } from "@/config/env.js";
+import { generateCsrfToken } from "@/utils/csrf.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -15,6 +16,13 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
     email,
     password,
   );
+
+  const csrfToken = generateCsrfToken();
+
+  res.cookie("csrfToken", csrfToken, {
+    secure: env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
@@ -44,6 +52,13 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     password,
   );
 
+  const csrfToken = generateCsrfToken();
+
+  res.cookie("csrfToken", csrfToken, {
+    secure: env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: env.NODE_ENV === "production",
@@ -67,6 +82,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const logout = asyncHandler(async (_req: Request, res: Response) => {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
+  res.clearCookie("csrfToken");
 
   res.status(200).json({
     status: "success",
@@ -79,6 +95,13 @@ export const refreshToken = asyncHandler(
     const refreshToken = req.cookies?.refreshToken;
 
     const newAccessToken = refreshAccessTokenService(refreshToken);
+
+    const csrfToken = generateCsrfToken();
+
+    res.cookie("csrfToken", csrfToken, {
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
