@@ -8,13 +8,25 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true, // allows null for OAuth-only users
     },
     password: {
       type: String,
-      required: true,
       select: false,
+    },
+    githubId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    avatar: {
+      type: String,
+    },
+    provider: {
+      type: String,
+      enum: ["local", "github"],
+      default: "local",
     },
   },
   { timestamps: true },

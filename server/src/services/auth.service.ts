@@ -6,6 +6,7 @@ import {
   verifyRefreshToken,
 } from "./token.service.js";
 import { User } from "@/models/User.js";
+import { GitHubUser } from "./github.service.js";
 
 export const signupService = async (
   name: string,
@@ -25,12 +26,10 @@ export const signupService = async (
 
   const accessToken = signAccessToken({
     userId: user._id.toString(),
-    email: user.email,
   });
 
   const refreshToken = signRefreshToken({
     userId: user._id.toString(),
-    email: user.email,
   });
 
   return {
@@ -47,7 +46,7 @@ export const signupService = async (
 export const loginService = async (email: string, password: string) => {
   const user = await User.findOne({ email }).select("+password");
 
-  if (!user) {
+  if (!user || !user.password) {
     // 401 = Unauthorized
     throw new AppError("Invalid credentials", 401);
   }
@@ -60,12 +59,10 @@ export const loginService = async (email: string, password: string) => {
 
   const accessToken = signAccessToken({
     userId: user._id.toString(),
-    email: user.email,
   });
 
   const refreshToken = signRefreshToken({
     userId: user._id.toString(),
-    email: user.email,
   });
 
   return {
@@ -88,6 +85,29 @@ export const refreshAccessTokenService = (refreshToken: string) => {
 
   return signAccessToken({
     userId: decoded.userId,
-    email: decoded.email,
+  });
+};
+
+export const findOrCreateGitHubUser = async (githubUser: GitHubUser) => {
+  let user = await User.findOne({ githubId: githubUser.id.toString() });
+
+  if (user) return user;
+
+  if (githubUser.email) {
+    user = await User.findOne({ email: githubUser.email });
+    if (user) {
+      user.githubId = githubUser.id.toString();
+      user.provider = "github";
+      await user.save();
+      return user;
+    }
+  }
+
+  return User.create({
+    name: githubUser.login,
+    email: githubUser.email,
+    githubId: githubUser.id.toString(),
+    avatar: githubUser.avatar_url,
+    provider: "github",
   });
 };

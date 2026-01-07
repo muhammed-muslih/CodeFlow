@@ -4,11 +4,13 @@ import {
   signupService,
   loginService,
   refreshAccessTokenService,
+  findOrCreateGitHubUser,
 } from "@/services/auth.service.js";
 import { getGitHubUser } from "@/services/github.service.js";
 import { env } from "@/config/env.js";
 import { generateCsrfToken } from "@/utils/csrf.js";
 import { AppError } from "@/utils/AppError.js";
+import { signAccessToken, signRefreshToken } from "@/services/token.service.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -137,9 +139,31 @@ export const githubCallback = asyncHandler(
 
     const githubUser = await getGitHubUser(code);
 
-    res.status(200).json({
-      status: "success",
-      data: githubUser,
+    const user = await findOrCreateGitHubUser(githubUser);
+
+    const accessToken = signAccessToken({ userId: user._id.toString() });
+    const refreshToken = signRefreshToken({ userId: user._id.toString() });
+    const csrfToken = generateCsrfToken();
+
+    res.cookie("csrfToken", csrfToken, {
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
     });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.redirect(`${env.CLIENT_URL}/app`);
   },
 );
