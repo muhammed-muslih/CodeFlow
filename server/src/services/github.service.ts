@@ -1,13 +1,7 @@
 import axios from "axios";
 import { env } from "@/config/env.js";
 import { AppError } from "@/utils/AppError.js";
-
-export interface GitHubUser {
-  id: number;
-  login: string;
-  email: string | null;
-  avatar_url: string;
-}
+import { GitHubUser } from "@/types/auth.types.js";
 
 export const getGitHubUser = async (code: string): Promise<GitHubUser> => {
   // Exchange code for access token

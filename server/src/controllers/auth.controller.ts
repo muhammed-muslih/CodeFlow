@@ -11,6 +11,7 @@ import { env } from "@/config/env.js";
 import { generateCsrfToken } from "@/utils/csrf.js";
 import { AppError } from "@/utils/AppError.js";
 import { signAccessToken, signRefreshToken } from "@/services/token.service.js";
+import { getUserByIdSafe } from "@/services/user.service.js";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -80,17 +81,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",
     data: { user },
-  });
-});
-
-export const logout = asyncHandler(async (_req: Request, res: Response) => {
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
-  res.clearCookie("csrfToken");
-
-  res.status(200).json({
-    status: "success",
-    message: "Logged out successfully",
   });
 });
 
@@ -167,3 +157,39 @@ export const githubCallback = asyncHandler(
     res.redirect(`${env.CLIENT_URL}/app`);
   },
 );
+
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  res.clearCookie("csrfToken");
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
+});
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new AppError("Unauthorized", 401);
+  }
+
+  const user = await getUserByIdSafe(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  res.status(200).json({
+    status: "success",
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      provider: user.provider,
+    },
+  });
+});

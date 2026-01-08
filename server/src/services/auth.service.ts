@@ -6,7 +6,7 @@ import {
   verifyRefreshToken,
 } from "./token.service.js";
 import { User } from "@/models/User.js";
-import { GitHubUser } from "./github.service.js";
+import { GitHubUser } from "@/types/auth.types.js";
 
 export const signupService = async (
   name: string,

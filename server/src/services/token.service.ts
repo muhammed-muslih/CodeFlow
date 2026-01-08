@@ -1,10 +1,6 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { env } from "@/config/env.js";
-
-export interface JwtPayload {
-  userId: string;
-  email?: string;
-}
+import { JwtPayload } from "@/types/auth.types.js";
 
 export const signAccessToken = (payload: JwtPayload): string => {
   const options: SignOptions = {

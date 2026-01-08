@@ -5,11 +5,16 @@ import { httpLogger } from "@/utils/loggerHttp.js";
 import { errorHandler } from "@/middleware/error.middleware.js";
 import authRoutes from "@/routes/auth.routes.js";
 import { AppError } from "./utils/AppError.js";
-import { csrfProtect } from "@/middleware/csrf.middleware.js";
+import { env } from "./config/env.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: env.CLIENT_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(httpLogger);

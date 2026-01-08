@@ -2,18 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "@/utils/AppError.js";
 import { verifyAccessToken } from "@/services/token.service.js";
 
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email?: string;
-  };
-}
-
-export const protect = (
-  req: AuthRequest,
-  _res: Response,
-  next: NextFunction,
-) => {
+export const protect = (req: Request, _res: Response, next: NextFunction) => {
   const token = req.cookies?.accessToken;
 
   if (!token) {
