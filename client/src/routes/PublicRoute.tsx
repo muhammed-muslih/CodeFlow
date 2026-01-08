@@ -1,10 +1,9 @@
-import { Navigate, useLocation } from "react-router";
+import { Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import type { JSX } from "react";
 
-export function ProtectedRoute({ children }: { children: JSX.Element }) {
+export function PublicRoute({ children }: { children: JSX.Element }) {
   const { isAuthenticated, isLoading } = useAuth();
-  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -14,8 +13,9 @@ export function ProtectedRoute({ children }: { children: JSX.Element }) {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to={"/auth/login"} replace state={{ from: location }} />;
+  if (isAuthenticated) {
+    return <Navigate to="/app" replace />;
   }
+
   return children;
 }

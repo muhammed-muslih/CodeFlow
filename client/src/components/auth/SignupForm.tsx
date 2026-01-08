@@ -1,53 +1,77 @@
 import { Input, Button, Divider } from "../ui";
 import { FaGithub } from "react-icons/fa";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema, type SignupFormData } from "../../schemas/auth.schema";
+import { signupApi } from "../../services/auth.api";
+import { useAuth } from "../../context/AuthContext";
 
 export function SignupForm() {
-  const [loading, setLoading] = useState(false);
+  const { refreshUser } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const [error, setError] = useState<string | null>(null);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
+
+  const onSubmit = async ({ confirmPassword, ...data }: SignupFormData) => {
+    try {
+      setError(null);
+
+      await signupApi(data);
+      refreshUser();
+
+      reset();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Signup failed");
+    }
   };
 
   const handleGithubSignup = () => {
-    console.log("Signup with Github");
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github`;
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <Input label="Full name" name="name" placeholder="Your name" required />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input
+        label="Full name"
+        placeholder="Your name"
+        {...register("name")}
+        error={errors.name?.message}
+      />
 
       <Input
         label="Email"
         type="email"
-        name="email"
         placeholder="you@example.com"
-        required
+        {...register("email")}
+        error={errors.email?.message}
       />
 
       <Input
         label="Password"
         type="password"
-        name="password"
         placeholder="••••••••"
-        required
+        {...register("password")}
+        error={errors.password?.message}
       />
 
       <Input
         label="Confirm password"
         type="password"
-        name="confirmPassword"
         placeholder="••••••••"
-        required
+        {...register("confirmPassword")}
+        error={errors.confirmPassword?.message}
       />
-      <Button type="submit" className="w-full" isLoading={loading}>
+      <Button type="submit" className="w-full" isLoading={isSubmitting}>
         Create account
       </Button>
+      {error && <span className="text-xs text-error">{error}</span>}
 
       <Divider />
 

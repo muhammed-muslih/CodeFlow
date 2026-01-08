@@ -7,15 +7,18 @@ import {
 } from "react-router";
 import { AuthRoutes } from "./AuthRoutes";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { PublicRoute } from "./PublicRoute";
 import { Button } from "../components/ui";
+import { logoutApi } from "../services/auth.api";
 import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
-  const { logout } = useAuth();
   const navigate = useNavigate();
+  const { clearUser } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logoutApi();
+    clearUser();
     navigate("/auth/login", { replace: true });
   };
 
@@ -31,7 +34,14 @@ export function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth/*" element={<AuthRoutes />} />
+        <Route
+          path="/auth/*"
+          element={
+            <PublicRoute>
+              <AuthRoutes />
+            </PublicRoute>
+          }
+        />
 
         <Route
           path="/app"

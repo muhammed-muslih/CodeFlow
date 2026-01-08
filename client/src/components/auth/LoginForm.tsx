@@ -1,53 +1,67 @@
 import { Button, Input, Divider } from "../ui";
-import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { type LoginFormData, loginSchema } from "../../schemas/auth.schema";
+import { loginApi } from "../../services/auth.api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router";
 
 export function LoginForm() {
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const [error, setError] = useState<string | null>(null);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    login({ id: "1", name: "Muslih", email: "muslih@example.com" });
-    navigate("/app", { replace: true });
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      setError(null);
+
+      await loginApi(data);
+      refreshUser();
+
+      reset();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Login failed");
+    }
   };
 
   const handleGithubLogin = () => {
-    console.log("Login with Github");
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github`;
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input
         label="Email"
         type="email"
-        name="email"
         placeholder="you@example.com"
-        required
+        {...register("email")}
+        error={errors.email?.message}
       />
       <Input
         label="Password"
         type="password"
-        name="password"
         placeholder="••••••••"
-        required
+        {...register("password")}
+        error={errors.password?.message}
       />
       <Button
         type="submit"
         className="w-full cursor-pointer"
-        isLoading={loading}
+        isLoading={isSubmitting}
       >
         Sign In
       </Button>
+      {error && <span className="text-xs text-error">{error}</span>}
 
       <Divider />
 
