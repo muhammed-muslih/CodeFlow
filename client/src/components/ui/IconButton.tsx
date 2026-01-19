@@ -15,16 +15,15 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           "inline-flex h-10 w-10 items-center justify-center rounded-md transition",
           "text-text-secondary",
           "hover:bg-border hover:text-text-primary",
-          "focus:outline-none focus:ring-2 focus:ring-primary",
           active && "bg-border text-primary",
-          className
+          className,
         )}
         {...props}
       >
         {icon}
       </button>
     );
-  }
+  },
 );
 
 IconButton.displayName = "IconButton";
