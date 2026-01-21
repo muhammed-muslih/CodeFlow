@@ -10,7 +10,8 @@ export function Topbar() {
     <header className="flex h-14 items-center justify-between border-b border-border bg-surface px-4">
       <div className="flex items-center gap-2">
         <h1 className="text-sm font-medium text-text-primary font-mono">
-          {getGreeting()}, <span className="font-semibold">Muslih!</span>
+          {getGreeting()},{" "}
+          <span className="font-semibold text-primary">Muslih!</span>
         </h1>
       </div>
 
