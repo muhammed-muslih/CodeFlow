@@ -60,7 +60,7 @@ export function Sidebar() {
     >
       {/* Top section */}
       <div>
-        <div className="flex h-16 items-center justify-center border-b border-border">
+        <div className="flex h-14 items-center justify-center border-b border-border">
           <AnimatePresence mode="wait">
             {expanded ? (
               <motion.img
