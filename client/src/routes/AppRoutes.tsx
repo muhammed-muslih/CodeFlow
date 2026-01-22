@@ -25,9 +25,9 @@ export function AppRoutes() {
         <Route
           path="/app"
           element={
-            // <ProtectedRoute>
-            <AppLayout />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
           }
         >
           {AppLayoutRoutes()}
