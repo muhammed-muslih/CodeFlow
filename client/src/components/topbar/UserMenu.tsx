@@ -3,10 +3,15 @@ import { FaChevronDown, FaUser } from "react-icons/fa";
 import { ImExit } from "react-icons/im";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { logoutApi } from "@/services/auth.api";
+import { useNavigate } from "react-router";
+import { useAuth } from "@/context/AuthContext";
 
 export function UserMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { clearUser } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -19,6 +24,12 @@ export function UserMenu() {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = async () => {
+    await logoutApi();
+    clearUser();
+    navigate("/auth/login", { replace: true });
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -54,6 +65,7 @@ export function UserMenu() {
               Profile
             </Button>
             <Button
+              onClick={handleLogout}
               variant="secondary"
               className="items-center px-3 py-2 cursor-pointer text-error"
             >
