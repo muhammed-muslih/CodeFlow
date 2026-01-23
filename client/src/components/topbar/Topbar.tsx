@@ -4,8 +4,11 @@ import { IoNotifications } from "react-icons/io5";
 import { Button } from "../ui";
 import { UserMenu } from "./UserMenu";
 import { getGreeting } from "@/lib/getGreeting";
+import { CreateProjectModal } from "../modal/CreateProjectModal";
+import { useState } from "react";
 
 export function Topbar() {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <header className="flex h-14 items-center justify-between border-b border-border bg-surface px-4">
       <div className="flex items-center gap-2">
@@ -29,7 +32,13 @@ export function Topbar() {
           aria-label="Notifications"
         />
 
-        <Button className="cursor-pointer"> + New Project</Button>
+        <Button onClick={() => setOpenModal(true)} className="cursor-pointer">
+          + New Project
+        </Button>
+        <CreateProjectModal
+          open={openModal}
+          onclose={() => setOpenModal(false)}
+        />
 
         <UserMenu />
       </div>
