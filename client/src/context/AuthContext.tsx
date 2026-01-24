@@ -30,15 +30,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const data = await getMeApi();
-      setUser(data.user);
+      const res = await getMeApi();
+      setUser(res.user);
     } catch {
       setUser(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    refreshUser().finally(() => setIsLoading(false));
+    refreshUser();
   }, []);
 
   const clearUser = () => setUser(null);
