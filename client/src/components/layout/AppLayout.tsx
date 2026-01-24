@@ -4,11 +4,11 @@ import { Outlet } from "react-router";
 
 export function AppLayout() {
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar />
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-y-auto p-4 no-scrollbar">
           <Outlet />
         </main>
       </div>

@@ -34,6 +34,10 @@
   }
 }
 
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;
