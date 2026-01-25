@@ -3,6 +3,7 @@ import { type Project } from "@/types/project.types";
 import { useAuth } from "@/context/AuthContext";
 import { formatDate } from "@/lib/formatDate";
 import { FaUsers } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 interface ProjectCardProps {
   project: Project;
@@ -10,8 +11,9 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const { name, description, collaborators, owner, updatedAt } = project;
+  const { _id, name, description, collaborators, owner, updatedAt } = project;
 
   const isOwner = owner._id === user?._id;
 
@@ -20,7 +22,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const role = isOwner ? "owner" : (collaborator?.role ?? "viewer");
 
   return (
-    <Card className="flex flex-col gap-4 transition hover:border-primary/40 hover:shadow-soft cursor-pointer">
+    <Card
+      onClick={() => navigate(`/app/projects/${_id}`)}
+      className="flex flex-col gap-4 transition hover:border-primary/40 hover:shadow-soft cursor-pointer"
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-3">
           <h3 className="text-sm font-semibold text-text-primary truncate">
@@ -69,7 +74,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <span className="text-xs text-text-secondary">
             Updated {formatDate(updatedAt)}
           </span>
-          <Button variant="primary" className="cursor-pointer">
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/app/projects/${_id}`);
+            }}
+            variant="primary"
+            className="cursor-pointer"
+          >
             Open
           </Button>
         </div>
