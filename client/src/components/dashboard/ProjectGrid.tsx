@@ -1,6 +1,7 @@
 import { ProjectCard } from "./ProjectCard";
+import { type Project } from "@/types/project.types";
 
-export function ProjectGrid({ projects }: { projects: any[] }) {
+export function ProjectGrid({ projects }: { projects: Project[] }) {
   if (projects.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border p-10 text-center ">
@@ -11,7 +12,7 @@ export function ProjectGrid({ projects }: { projects: any[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((project) => (
-        <ProjectCard key={project.id} {...project} />
+        <ProjectCard key={project._id} project={project} />
       ))}
     </div>
   );

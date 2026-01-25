@@ -12,9 +12,14 @@ import { useState } from "react";
 interface CreateProjectModalProps {
   open: boolean;
   onclose: () => void;
+  onCreate: (payload: ProjectCreationData) => Promise<void>;
 }
 
-export function CreateProjectModal({ open, onclose }: CreateProjectModalProps) {
+export function CreateProjectModal({
+  open,
+  onclose,
+  onCreate,
+}: CreateProjectModalProps) {
   const [error, setError] = useState<string | null>();
 
   const {
@@ -27,11 +32,23 @@ export function CreateProjectModal({ open, onclose }: CreateProjectModalProps) {
   });
 
   const onSubmit = async (data: ProjectCreationData) => {
-    console.log(data);
+    try {
+      setError(null);
+      await onCreate(data);
+      onclose();
+      reset();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to create project");
+    }
+  };
+
+  const closeModalAndResetForm = () => {
+    onclose();
+    reset();
   };
 
   return (
-    <Modal open={open} onClose={onclose}>
+    <Modal open={open} onClose={closeModalAndResetForm}>
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="text-lg font-semibold text-text-primary">
@@ -49,6 +66,7 @@ export function CreateProjectModal({ open, onclose }: CreateProjectModalProps) {
             autoFocus
             {...register("name")}
             error={errors.name?.message}
+            autoComplete="off"
           />
 
           <Input
@@ -56,6 +74,7 @@ export function CreateProjectModal({ open, onclose }: CreateProjectModalProps) {
             placeholder="Optional description"
             {...register("description")}
             error={errors.description?.message}
+            autoComplete="off"
           />
 
           <div className="flex justify-end gap-2 pt-2">
@@ -63,7 +82,7 @@ export function CreateProjectModal({ open, onclose }: CreateProjectModalProps) {
               variant="secondary"
               onClick={(e) => {
                 e.preventDefault();
-                onclose();
+                closeModalAndResetForm();
               }}
             >
               Cancel

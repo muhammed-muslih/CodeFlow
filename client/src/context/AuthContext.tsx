@@ -6,14 +6,7 @@ import {
   useEffect,
 } from "react";
 import { getMeApi } from "../services/auth.api";
-
-interface User {
-  id: string;
-  name: string;
-  email?: string | null;
-  avatar?: string | null;
-  provider: "local" | "github";
-}
+import { type User } from "@/types/user.types";
 
 interface AuthContextType {
   user: User | null;
