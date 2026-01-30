@@ -1,22 +1,39 @@
-import { useParams } from "react-router";
+import { useState } from "react";
+import { ProjectHeader } from "@/components/project/ProjectHeader";
+import { Tabs } from "@/components/ui/Tabs";
+import { OverviewContent } from "@/components/project/OverviewContent";
+import { ActivitySidebar } from "@/components/project/ActivitySidebar";
+import { SettingsContent } from "@/components/project/SettingsContent";
 
 export function ProjectPage() {
-  const { projectId } = useParams();
+  const [tab, setTab] = useState<"Overview" | "Settings">("Overview");
+
+  const isOwner = true;
+
+  const project = {
+    name: "CodeFlow Backend",
+    description: "Auth, collaboration & real-time sync services",
+    role: "owner" as const,
+  };
 
   return (
-    <div className="flex gap-6 flex-col h-full">
-      <div className="pb-4 px-2 border-b border-border">
-        <h2 className="text-lg font-semibold text-text-primary">
-          Project Workspace
-        </h2>
-        <p className="text-xs text-text-secondary font-semibold">
-          Project ID: {projectId}
-        </p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <ProjectHeader {...project} />
 
-      <div className="flex flex-1 items-center justify-center text-text-secondary">
-        Workspace coming soon 🚀
-      </div>
+      <Tabs
+        tabs={isOwner ? ["Overview", "Settings"] : ["Overview"]}
+        active={tab}
+        onChange={(t) => setTab(t as any)}
+      />
+
+      {tab === "Overview" && (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+          <OverviewContent isOwner={isOwner} />
+          <ActivitySidebar />
+        </div>
+      )}
+
+      {tab === "Settings" && isOwner && <SettingsContent />}
     </div>
   );
 }

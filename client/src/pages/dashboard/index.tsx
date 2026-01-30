@@ -16,11 +16,11 @@ export function Dashboard() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      <div className="pb-4 border-b border-border">
         <h2 className="text-lg font-semibold text-text-primary">
           Your Projects
         </h2>
-        <p className="text-sm font-semibold text-text-secondary">
+        <p className="mt-1 text-sm font-semibold text-text-secondary">
           Continue working on your active projects
         </p>
       </div>
