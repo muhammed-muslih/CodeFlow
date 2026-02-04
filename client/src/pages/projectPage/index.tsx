@@ -4,6 +4,7 @@ import { Tabs } from "@/components/ui/Tabs";
 import { OverviewContent } from "@/components/project/OverviewContent";
 import { ActivitySidebar } from "@/components/project/ActivitySidebar";
 import { SettingsContent } from "@/components/project/SettingsContent";
+import { FaCode } from "react-icons/fa";
 
 export function ProjectPage() {
   const [tab, setTab] = useState<"Overview" | "Settings">("Overview");
@@ -24,10 +25,11 @@ export function ProjectPage() {
         tabs={isOwner ? ["Overview", "Settings"] : ["Overview"]}
         active={tab}
         onChange={(t) => setTab(t as any)}
+        icon={<FaCode size={18} />}
       />
 
       {tab === "Overview" && (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_1fr]">
           <OverviewContent isOwner={isOwner} />
           <ActivitySidebar />
         </div>
