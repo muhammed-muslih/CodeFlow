@@ -34,6 +34,11 @@ const projectSchema = new Schema<ProjectType>(
         },
       },
     ],
+    visibility: {
+      type: String,
+      enum: ["private", "public"],
+      default: "private",
+    },
   },
   { timestamps: true },
 );

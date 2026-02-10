@@ -5,4 +5,5 @@ export interface ProjectType {
   description?: string;
   owner: Types.ObjectId;
   collaborators: Types.ObjectId[];
+  visibility: "private" | "public";
 }

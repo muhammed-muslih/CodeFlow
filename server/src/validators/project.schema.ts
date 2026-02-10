@@ -13,5 +13,7 @@ export const createProjectSchema = z.object({
       .trim()
       .max(500, "Description must be at most 500 characters")
       .optional(),
+
+    visibility: z.enum(["private", "public"]),
   }),
 });
