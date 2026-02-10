@@ -6,14 +6,13 @@ const activities = [
   { id: 3, text: "Initial setup completed", time: "10m ago" },
   { id: 2, text: "Muslih joined as Owner", time: "1h ago" },
   { id: 1, text: "Project created", time: "2h ago" },
-  { id: 3, text: "Initial setup completed", time: "10m ago" },
 ];
 
 export function ActivitySidebar() {
   const [hasOverflow, setHasOverflow] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollRef });
-
   const thumbY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   useLayoutEffect(() => {

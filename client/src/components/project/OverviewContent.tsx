@@ -2,8 +2,16 @@ import { Card, Avatar, Button, Badge } from "../ui";
 import { FaUsers } from "react-icons/fa";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useState, useLayoutEffect } from "react";
+import { RiGitRepositoryPrivateFill } from "react-icons/ri";
+import { FaGlobe, FaCalendarDays, FaClock } from "react-icons/fa6";
 
-export function OverviewContent({ isOwner }: { isOwner: boolean }) {
+export function OverviewContent({
+  isOwner,
+  visibility,
+}: {
+  isOwner: boolean;
+  visibility: "public" | "private";
+}) {
   const collaborators: {
     id: number;
     name: string;
@@ -24,9 +32,9 @@ export function OverviewContent({ isOwner }: { isOwner: boolean }) {
     },
   ];
   const [hasOverflow, setHasOverflow] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollRef });
-
   const thumbY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   useLayoutEffect(() => {
@@ -62,9 +70,31 @@ export function OverviewContent({ isOwner }: { isOwner: boolean }) {
           </Badge>
         </div>
 
-        <div className="text-sm text-text-secondary space-y-1">
-          <p>Created: Jan 20, 2026</p>
-          <p>Last updated: 2 hours ago</p>
+        <div className="space-y-2 text-sm text-text-secondary pl-3">
+          <div className="flex items-center gap-2">
+            {visibility === "public" ? (
+              <FaGlobe className="h-4 w-4" />
+            ) : (
+              <RiGitRepositoryPrivateFill className="h-4 w-4" />
+            )}
+
+            <span>
+              Visibility:{" "}
+              <span className="">
+                {visibility === "public" ? "Public" : "Private"}
+              </span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <FaCalendarDays className="h-4 w-4" />
+            <span>Created: Jan 20, 2026</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <FaClock className="h-4 w-4" />
+            <span>Last updated: 2 hours ago</span>
+          </div>
         </div>
       </Card>
 

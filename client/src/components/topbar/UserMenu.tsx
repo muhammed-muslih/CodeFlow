@@ -59,7 +59,7 @@ export function UserMenu() {
           >
             <Button
               variant={"secondary"}
-              className="items-center px-3 py-2 cursor-pointer"
+              className="items-center px-3 py-2 cursor-pointer w-full"
             >
               <FaUser size={16} />
               Profile
@@ -67,7 +67,7 @@ export function UserMenu() {
             <Button
               onClick={handleLogout}
               variant="secondary"
-              className="items-center px-3 py-2 cursor-pointer text-error"
+              className="items-center px-3 py-2 cursor-pointer text-error w-full"
             >
               <ImExit size={16} />
               Logout

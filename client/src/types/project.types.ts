@@ -11,8 +11,15 @@ export interface Project {
   _id: string;
   name: string;
   description?: string;
+  visibility: "private" | "public";
   owner: UserSummary;
   collaborators: Collaborator[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CreateProjectPayload {
+  name: string;
+  description?: string;
+  visibility: "private" | "public";
 }

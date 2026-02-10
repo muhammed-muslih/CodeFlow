@@ -1,10 +1,15 @@
 import { Card, Button, Input } from "../ui";
 import { useState } from "react";
+import { RiGitRepositoryPrivateFill } from "react-icons/ri";
+import { FaGlobe } from "react-icons/fa6";
+import { cn } from "@/lib/cn";
 
 export function SettingsContent() {
   const [projectInputDisabled, setProjectInputDisabled] = useState(true);
   const [descriptionInputDisabled, setDescriptionInputDisabled] =
     useState(true);
+  const [visibilityEdit, setVisibilityEdit] = useState(false);
+  const [visibility, setVisibility] = useState<"private" | "public">("private");
 
   return (
     <div className="flex min-h-[60vh] w-full justify-center px-4">
@@ -82,20 +87,88 @@ export function SettingsContent() {
                 </Button>
               )}
             </div>
+
+            <div>
+              <h3 className="mb-2 text-sm font-semibold">Project visibility</h3>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={!visibilityEdit}
+                    onClick={() => setVisibility("private")}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition cursor-pointer",
+                      !visibilityEdit && "opacity-50 cursor-not-allowed",
+                      visibility === "private"
+                        ? "bg-muted text-text-primary border-border"
+                        : "text-text-secondary border-border hover:bg-muted/80",
+                    )}
+                  >
+                    <RiGitRepositoryPrivateFill className="h-3.5 w-3.5" />
+                    Private
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!visibilityEdit}
+                    onClick={() => setVisibility("public")}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition cursor-pointer",
+                      !visibilityEdit && "opacity-50 cursor-not-allowed",
+                      visibility === "public"
+                        ? "bg-muted text-text-primary border-border"
+                        : "text-text-secondary border-border hover:bg-muted/80",
+                    )}
+                  >
+                    <FaGlobe className="h-3.5 w-3.5" />
+                    Public
+                  </button>
+                </div>
+
+                {visibilityEdit ? (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setVisibilityEdit(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setVisibilityEdit(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </div>
+
+              <p className="mt-2 text-xs text-text-secondary max-w-md">
+                Public projects can be viewed by anyone with the link. Private
+                projects are only accessible to collaborators.
+              </p>
+            </div>
           </form>
         </Card>
 
-        <Card className="border border-error/30">
+        <Card className="border border-error/30 flex flex-col">
           <h3 className="mb-1 text-sm font-semibold text-error">Danger Zone</h3>
           <p className="mb-4 text-sm text-text-secondary">
             This action cannot be undone.
           </p>
-          <Button
-            variant="secondary"
-            className="bg-error text-white hover:bg-error/90"
-          >
-            Delete Project
-          </Button>
+          <div className="flex justify-start">
+            <Button
+              variant="secondary"
+              className="bg-error text-white hover:bg-error/90"
+            >
+              Delete Project
+            </Button>
+          </div>
         </Card>
       </div>
     </div>

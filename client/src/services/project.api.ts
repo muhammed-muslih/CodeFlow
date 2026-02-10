@@ -1,9 +1,5 @@
 import { api } from "./api";
-
-export interface CreateProjectPayload {
-  name: string;
-  description?: string;
-}
+import { type CreateProjectPayload } from "@/types/project.types";
 
 export const createProjectApi = async (payload: CreateProjectPayload) => {
   const res = await api.post("/projects", payload);

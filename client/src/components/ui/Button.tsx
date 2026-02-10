@@ -1,5 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "../../lib/cn";
+import { motion, spring } from "motion/react";
 
 type ButtonVariant = "primary" | "secondary";
 
@@ -21,26 +22,39 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+      "inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium transition focus:outline-none disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     const variants = {
       primary:
-        "bg-primary text-white hover:bg-[var(--color-primary-hover)] border border-[var(--color-primary-hover)] focus:ring-primary",
+        "bg-primary text-white hover:bg-[var(--color-primary-hover)] border border-[var(--color-primary-hover)]",
       secondary:
-        "bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-[var(--color-border)] focus:ring-[var(--color-surface)]",
+        "bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-[var(--color-border)]",
     };
     return (
-      <button
-        ref={ref}
-        className={cn(baseStyles, variants[variant], className)}
-        {...props}
-        disabled={disabled || isLoading}
+      <motion.div
+        initial={false}
+        whileTap={{
+          scale: 0.9,
+          transition: {
+            type: spring,
+            stiffness: 700,
+            damping: 30,
+            mass: 1,
+          },
+        }}
       >
-        {isLoading && (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-        )}
-        {children}
-      </button>
+        <button
+          ref={ref}
+          className={cn(baseStyles, variants[variant], className)}
+          {...props}
+          disabled={disabled || isLoading}
+        >
+          {isLoading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          )}
+          {children}
+        </button>
+      </motion.div>
     );
   },
 );

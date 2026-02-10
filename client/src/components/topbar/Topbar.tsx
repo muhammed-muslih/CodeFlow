@@ -6,12 +6,10 @@ import { UserMenu } from "./UserMenu";
 import { getGreeting } from "@/lib/getGreeting";
 import { CreateProjectModal } from "../modal/CreateProjectModal";
 import { useState } from "react";
+import { type CreateProjectPayload } from "@/types/project.types";
 
 interface TopbarProps {
-  createProject: (payload: {
-    name: string;
-    description?: string;
-  }) => Promise<void>;
+  createProject: (payload: CreateProjectPayload) => Promise<void>;
 }
 
 export function Topbar({ createProject }: TopbarProps) {

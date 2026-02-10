@@ -15,6 +15,7 @@ export function ProjectPage() {
     name: "CodeFlow Backend",
     description: "Auth, collaboration & real-time sync services",
     role: "owner" as const,
+    visibility: "private" as const,
   };
 
   return (
@@ -30,7 +31,7 @@ export function ProjectPage() {
 
       {tab === "Overview" && (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_1fr]">
-          <OverviewContent isOwner={isOwner} />
+          <OverviewContent isOwner={isOwner} visibility={project.visibility} />
           <ActivitySidebar />
         </div>
       )}

@@ -4,6 +4,8 @@ import { useAuth } from "@/context/AuthContext";
 import { formatDate } from "@/lib/formatDate";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { RiGitRepositoryPrivateFill } from "react-icons/ri";
+import { FaGlobe } from "react-icons/fa6";
 
 interface ProjectCardProps {
   project: Project;
@@ -13,7 +15,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { _id, name, description, collaborators, owner, updatedAt } = project;
+  const {
+    _id,
+    name,
+    description,
+    collaborators,
+    owner,
+    updatedAt,
+    visibility,
+  } = project;
 
   const isOwner = owner._id === user?._id;
 
@@ -24,7 +34,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card
       onClick={() => navigate(`/app/projects/${_id}`)}
-      className="flex flex-col gap-4 transition hover:border-primary/40 hover:shadow-soft cursor-pointer"
+      className="flex flex-col gap-4 hover:border-primary/40 hover:shadow-soft cursor-pointer hover:scale-101 transition-transform duration-300"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-3">
@@ -71,9 +81,22 @@ export function ProjectCard({ project }: ProjectCardProps) {
         )}
 
         <div className="flex items-center gap-3">
-          <span className="text-xs text-text-secondary">
-            Updated {formatDate(updatedAt)}
-          </span>
+          <div className="flex items-center gap-2 text-xs text-text-secondary">
+            <span>Updated {formatDate(updatedAt)}</span>
+            <span className="rounded-full w-1 h-1 bg-text-secondary" />
+            {visibility === "public" ? (
+              <FaGlobe
+                className="h-4 w-4"
+                title="Public project text-primary"
+              />
+            ) : (
+              <RiGitRepositoryPrivateFill
+                className="h-4 w-4"
+                title="Private project"
+              />
+            )}
+          </div>
+
           <Button
             onClick={(e) => {
               e.stopPropagation();
