@@ -9,7 +9,7 @@ export const createProject = asyncHandler(
     const userId = req.user?.id;
 
     if (!userId) {
-      throw new AppError("Unauthorized", 401);
+      throw new AppError("Authentication required", 401);
     }
 
     const project = await projectService.createProject({
@@ -31,7 +31,7 @@ export const getUserProjects = asyncHandler(
     const userId = req.user?.id;
 
     if (!userId) {
-      throw new AppError("Unauthorized", 401);
+      throw new AppError("Authentication required", 401);
     }
 
     const projects = await projectService.getUserProjects(userId);
@@ -42,3 +42,23 @@ export const getUserProjects = asyncHandler(
     });
   },
 );
+
+export const getProject = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new AppError("Authentication required", 401);
+  }
+
+  if (!id) {
+    throw new AppError("Project ID is required", 400);
+  }
+
+  const data = await projectService.getProjectOverview(id, userId);
+
+  res.status(200).json({
+    status: "success",
+    ...data,
+  });
+});
