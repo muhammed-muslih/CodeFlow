@@ -2,6 +2,7 @@ import { Project } from "@/models/project.model.js";
 import { Types } from "mongoose";
 import { AppError } from "@/utils/AppError.js";
 import { PopulatedProject } from "@/types/project.types.js";
+import { logActivity } from "./activity.service.js";
 
 export const createProject = async ({
   userId,
@@ -20,19 +21,27 @@ export const createProject = async ({
     throw new AppError("Project name already exists", 409);
   }
 
-  return Project.create({
+  const project = await Project.create({
     name,
     description,
     owner: new Types.ObjectId(userId),
     collaborators: [],
     visibility,
   });
+
+  await logActivity({
+    projectId: project._id.toString(),
+    actorId: userId,
+    type: "PROJECT_CREATED",
+  });
+
+  return project;
 };
 
-export const getUserProjects = async (userId: string) => {
+export const getProjects = async (userId: string) => {
   return Project.find({
     $or: [
-      { visibility: "public" },
+      // { visibility: "public" },
       { owner: userId },
       { "collaborators.user": userId },
     ],
