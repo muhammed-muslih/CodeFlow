@@ -26,22 +26,20 @@ export const createProject = asyncHandler(
   },
 );
 
-export const getUserProjects = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.id;
+export const getProjects = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
 
-    if (!userId) {
-      throw new AppError("Authentication required", 401);
-    }
+  if (!userId) {
+    throw new AppError("Authentication required", 401);
+  }
 
-    const projects = await projectService.getUserProjects(userId);
+  const projects = await projectService.getProjects(userId);
 
-    res.status(200).json({
-      status: "success",
-      projects,
-    });
-  },
-);
+  res.status(200).json({
+    status: "success",
+    projects,
+  });
+});
 
 export const getProject = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
