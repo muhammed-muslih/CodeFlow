@@ -2,15 +2,22 @@ import { Badge } from "../ui";
 import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { FaGlobe } from "react-icons/fa6";
 import { IconButton } from "../ui";
+import { type ProjectRole } from "@/types/project.types";
 
 interface Props {
   name: string;
   description?: string;
-  role: "owner" | "editor" | "viewer";
   visibility: "public" | "private";
 }
 
-export function ProjectHeader({ name, description, role, visibility }: Props) {
+export function ProjectHeader({
+  project,
+  myRole,
+}: {
+  project: Props;
+  myRole: ProjectRole;
+}) {
+  const { name, visibility, description } = project;
   return (
     <div className="border-b border-border pb-4">
       <div className="flex items-center justify-between">
@@ -40,9 +47,9 @@ export function ProjectHeader({ name, description, role, visibility }: Props) {
             )}
           </span>
 
-          {/* Role */}
-          <Badge variant={role} className="capitalize">
-            {role}
+          {/* myRole */}
+          <Badge variant={myRole} className="capitalize">
+            {myRole}
           </Badge>
         </div>
       </div>

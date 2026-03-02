@@ -21,6 +21,7 @@ export function formatDate(date: string) {
 
   // 🔹 After 24 hours → normal date
   return past.toLocaleDateString(undefined, {
+    year: "numeric",
     month: "short",
     day: "numeric",
   });

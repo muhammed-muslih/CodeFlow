@@ -4,12 +4,20 @@ import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { FaGlobe } from "react-icons/fa6";
 import { cn } from "@/lib/cn";
 
-export function SettingsContent() {
+interface Props {
+  name: string;
+  description?: string;
+  visibility: "public" | "private";
+}
+
+export function SettingsContent({ project }: { project: Props }) {
   const [projectInputDisabled, setProjectInputDisabled] = useState(true);
   const [descriptionInputDisabled, setDescriptionInputDisabled] =
     useState(true);
   const [visibilityEdit, setVisibilityEdit] = useState(false);
-  const [visibility, setVisibility] = useState<"private" | "public">("private");
+  const [visibility, setVisibility] = useState<"private" | "public">(
+    project.visibility,
+  );
 
   return (
     <div className="flex min-h-[60vh] w-full justify-center px-4">
@@ -25,7 +33,7 @@ export function SettingsContent() {
                   label="Project name"
                   placeholder="My awesome project"
                   autoFocus
-                  value="CodeFlow Backend"
+                  value={project.name}
                   autoComplete="off"
                   disabled={projectInputDisabled}
                 />
@@ -59,7 +67,7 @@ export function SettingsContent() {
                 <Input
                   label="Description"
                   placeholder="Optional description"
-                  value={"Auth, collaboration & real-time sync services"}
+                  value={project.description}
                   autoComplete="off"
                   disabled={descriptionInputDisabled}
                 />
@@ -98,11 +106,14 @@ export function SettingsContent() {
                     disabled={!visibilityEdit}
                     onClick={() => setVisibility("private")}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition cursor-pointer",
-                      !visibilityEdit && "opacity-50 cursor-not-allowed",
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition",
+                      !visibilityEdit ? "cursor-not-allowed" : "cursor-pointer",
                       visibility === "private"
                         ? "bg-muted text-text-primary border-border"
                         : "text-text-secondary border-border hover:bg-muted/80",
+                      !visibilityEdit &&
+                        visibility !== "private" &&
+                        "opacity-50",
                     )}
                   >
                     <RiGitRepositoryPrivateFill className="h-3.5 w-3.5" />
@@ -114,11 +125,14 @@ export function SettingsContent() {
                     disabled={!visibilityEdit}
                     onClick={() => setVisibility("public")}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition cursor-pointer",
-                      !visibilityEdit && "opacity-50 cursor-not-allowed",
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium border transition",
+                      !visibilityEdit ? "cursor-not-allowed" : "cursor-pointer",
                       visibility === "public"
                         ? "bg-muted text-text-primary border-border"
                         : "text-text-secondary border-border hover:bg-muted/80",
+                      !visibilityEdit &&
+                        visibility !== "public" &&
+                        "opacity-50",
                     )}
                   >
                     <FaGlobe className="h-3.5 w-3.5" />

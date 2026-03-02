@@ -4,38 +4,23 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useState, useLayoutEffect } from "react";
 import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { FaGlobe, FaCalendarDays, FaClock } from "react-icons/fa6";
+import { type Project } from "@/types/project.types";
+import { formatDate } from "@/lib/formatDate";
 
 export function OverviewContent({
   isOwner,
-  visibility,
+  project,
 }: {
   isOwner: boolean;
-  visibility: "public" | "private";
+  project: Project;
 }) {
-  const collaborators: {
-    id: number;
-    name: string;
-    email: string;
-    role: "editor" | "viewer";
-  }[] = [
-    {
-      id: 1,
-      name: "David",
-      email: "david@example.com",
-      role: "editor",
-    },
-    {
-      id: 2,
-      name: "Emma",
-      email: "emma@example.com",
-      role: "viewer",
-    },
-  ];
   const [hasOverflow, setHasOverflow] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollRef });
   const thumbY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  const { collaborators, owner, visibility, updatedAt, createdAt } = project;
 
   useLayoutEffect(() => {
     const el = scrollRef.current;
@@ -61,8 +46,8 @@ export function OverviewContent({
         <div className="flex items-center gap-3 mb-4">
           <Avatar name="Muhammed Muslih" />
           <div>
-            <p className="text-sm font-medium">Muhammed Muslih</p>
-            <p className="text-xs text-text-secondary">muslih@example.com</p>
+            <p className="text-sm font-medium">{owner.name}</p>
+            <p className="text-xs text-text-secondary">{owner.email}</p>
           </div>
 
           <Badge variant="owner" className="ml-auto">
@@ -88,12 +73,12 @@ export function OverviewContent({
 
           <div className="flex items-center gap-2">
             <FaCalendarDays className="h-4 w-4" />
-            <span>Created: Jan 20, 2026</span>
+            <span>Created: {formatDate(createdAt)}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <FaClock className="h-4 w-4" />
-            <span>Last updated: 2 hours ago</span>
+            <span>Last updated: {formatDate(updatedAt)}</span>
           </div>
         </div>
       </Card>
@@ -120,28 +105,28 @@ export function OverviewContent({
 
           <div>
             {collaborators.length > 0 ? (
-              collaborators.map((user) => (
+              collaborators.map((collab) => (
                 <div
-                  key={user.id}
+                  key={owner._id}
                   className="flex items-center justify-between py-3 border-b border-border last:border-none"
                 >
                   <div className="flex items-center gap-3">
-                    <Avatar name={user.name} size="sm" />
+                    <Avatar name={collab.user.name} size="sm" />
                     <div>
-                      <p className="text-sm font-medium">{user.name}</p>
+                      <p className="text-sm font-medium">{collab.user.name}</p>
                       <p className="text-xs text-text-secondary">
-                        {user.email}
+                        {collab.user.email}
                       </p>
                     </div>
                   </div>
 
-                  <Badge variant={user.role} className="capitalize">
-                    {user.role}
+                  <Badge variant={collab.role} className="capitalize">
+                    {collab.role}
                   </Badge>
                 </div>
               ))
             ) : (
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <div className="flex items-center gap-2 text-sm text-text-secondary py-3">
                 <FaUsers size={14} />
                 No collaborators yet
               </div>

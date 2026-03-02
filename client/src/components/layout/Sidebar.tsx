@@ -14,6 +14,7 @@ import { cn } from "@/lib/cn";
 import { motion, AnimatePresence } from "motion/react";
 import codeflowLogoIcon from "@/assets/logos/codeflow-icon.png";
 import codeflowLogo from "@/assets/logos/codeflow-sub-logo.png";
+import { useAuth } from "@/context/AuthContext";
 
 const navItems = [
   {
@@ -49,6 +50,8 @@ export function Sidebar() {
   useEffect(() => {
     localStorage.setItem(SIDEBAR_KEY, JSON.stringify(expanded));
   }, [expanded]);
+
+  const { user } = useAuth();
 
   return (
     <motion.aside
@@ -145,7 +148,11 @@ export function Sidebar() {
 
       <div className="border-t border-border p-3 hover:bg-border cursor-pointer overflow-hidden">
         <div className="flex items-center justify-center">
-          <Avatar name="Muslih" size="sm" />
+          <Avatar
+            name={user?.name ?? "undefined"}
+            src={user?.avatar}
+            size="sm"
+          />
           <AnimatePresence>
             {expanded && (
               <motion.span
@@ -155,7 +162,7 @@ export function Sidebar() {
                 transition={{ duration: 0.15 }}
                 className="ml-3 text-sm font-medium text-text-primary"
               >
-                Muslih
+                {user?.name}
               </motion.span>
             )}
           </AnimatePresence>

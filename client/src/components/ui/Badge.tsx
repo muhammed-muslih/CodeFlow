@@ -1,6 +1,6 @@
 import { cn } from "../../lib/cn";
 
-type BadgeVariant = "owner" | "editor" | "viewer";
+type BadgeVariant = "owner" | "editor" | "viewer" | "guest";
 
 interface BadgeProps {
   variant?: BadgeVariant;
@@ -14,6 +14,8 @@ const variantClasses: Record<BadgeVariant, string> = {
   editor:
     "bg-[rgba(34,197,94,0.15)] text-[var(--color-success)] border border-[rgba(34,197,94,0.3)]",
   viewer:
+    "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)]",
+  guest:
     "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[var(--color-border)]",
 };
 

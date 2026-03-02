@@ -11,7 +11,7 @@ export function UserMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { clearUser } = useAuth();
+  const { clearUser, user } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -38,7 +38,7 @@ export function UserMenu() {
         variant="secondary"
         className="cursor-pointer group"
       >
-        <Avatar name="Muslih" size="xs" />
+        <Avatar name={user?.name ?? "undefined"} src={user?.avatar} size="xs" />
         <FaChevronDown
           size={16}
           className={`opacity-70 transition ${
