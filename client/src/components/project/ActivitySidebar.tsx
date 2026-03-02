@@ -1,14 +1,13 @@
 import { Card } from "../ui";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useLayoutEffect, useState } from "react";
+import { useProjectActivity } from "@/hooks/useProjectActivity";
+import { formatDistanceToNow } from "date-fns";
+import { ActivityMessage } from "./ActivityMessage";
 
-const activities = [
-  { id: 3, text: "Initial setup completed", time: "10m ago" },
-  { id: 2, text: "Muslih joined as Owner", time: "1h ago" },
-  { id: 1, text: "Project created", time: "2h ago" },
-];
+export function ActivitySidebar({ projectId }: { projectId?: string }) {
+  const { activities, loading } = useProjectActivity(projectId);
 
-export function ActivitySidebar() {
   const [hasOverflow, setHasOverflow] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -31,6 +30,10 @@ export function ActivitySidebar() {
     return () => window.removeEventListener("resize", checkOverflow);
   }, [activities.length]);
 
+  if (loading) {
+    return <Card>Loading activity...</Card>;
+  }
+
   return (
     <div className="relative max-h-[74vh]">
       <Card
@@ -43,18 +46,23 @@ export function ActivitySidebar() {
 
         <ul className="space-y-3 text-sm text-text-secondary mt-4">
           {activities.map((item) => (
-            <li key={item.id} className="flex gap-3">
+            <li key={item._id} className="flex gap-3">
               <span className="mt-1 h-2 w-2 rounded-full bg-border shrink-0" />
 
               <div className="flex flex-col">
-                <p className="text-sm text-text-primary">{item.text}</p>
-                <span className="text-xs text-text-secondary">{item.time}</span>
+                <p className="text-sm text-text-primary">
+                  {<ActivityMessage activity={item} />}
+                </p>
+                <span className="text-xs text-text-secondary">
+                  {formatDistanceToNow(new Date(item.createdAt))} ago
+                </span>
               </div>
             </li>
           ))}
         </ul>
       </Card>
 
+      {/* scrollbar */}
       {hasOverflow && (
         <motion.div
           initial={{ opacity: 0 }}

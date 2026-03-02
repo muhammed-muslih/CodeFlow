@@ -23,3 +23,13 @@ export interface CreateProjectPayload {
   description?: string;
   visibility: "private" | "public";
 }
+
+export type ProjectRole = "owner" | "editor" | "viewer" | "guest";
+
+export interface Activity {
+  _id: string;
+  actor?: { _id: string; name: string; email: string };
+  type: string;
+  meta?: any;
+  createdAt: string;
+}
